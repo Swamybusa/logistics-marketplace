@@ -28,36 +28,46 @@ import lombok.ToString;
 @Builder
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String fullName;
+	@Column(nullable = false)
+	private String fullName;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+	@Column(nullable = false, unique = true)
+	private String email;
 
-    @Column(nullable = false)
-    private String password;
+	@Column(nullable = false)
+	private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
-    
-    @OneToMany(mappedBy = "shipper")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Shipment> shipments;
-    
-    @OneToMany(mappedBy = "carrier")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Bid> bids;
-    
-    @OneToMany(mappedBy = "carrier")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Vehicle> vehicles;
-    
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Role role;
+
+	@OneToMany(mappedBy = "shipper")
+	@JsonIgnore
+	@ToString.Exclude
+	private List<Shipment> shipments;
+
+	@OneToMany(mappedBy = "carrier")
+	@JsonIgnore
+	@ToString.Exclude
+	private List<Bid> bids;
+
+	@OneToMany(mappedBy = "carrier")
+	@JsonIgnore
+	@ToString.Exclude
+	private List<Vehicle> vehicles;
+
+	@OneToMany(mappedBy = "reviewer")
+	@JsonIgnore
+	@ToString.Exclude
+	private List<Review> reviewsGiven;
+
+	@OneToMany(mappedBy = "reviewedUser")
+	@JsonIgnore
+	@ToString.Exclude
+	private List<Review> reviewsReceived;
+
 }
