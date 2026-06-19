@@ -24,7 +24,5 @@ public class Location {
     @Column(nullable = false)
     private String country;
 
-    @ManyToOne
-    @JoinColumn(name = "shipment_id", nullable = false)
-    private Shipment shipment;
+    
 }

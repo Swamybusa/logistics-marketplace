@@ -34,11 +34,7 @@ public class Shipment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
-	private String source;
-
-	@Column(nullable = false)
-	private String destination;
+	
 
 	@Column(nullable = false)
 	private Double weight;
@@ -51,6 +47,14 @@ public class Shipment {
 	private ShipmentStatus status;
 	
 	@ManyToOne
+	@JoinColumn(name = "source_location_id")
+	private Location sourceLocation;
+
+	@ManyToOne
+	@JoinColumn(name = "destination_location_id")
+	private Location destinationLocation;
+	
+	@ManyToOne
 	@JoinColumn(name = "shipper_id", nullable = false)
 	private User shipper;
 	
@@ -59,9 +63,6 @@ public class Shipment {
 	@ToString.Exclude
 	private List<Bid> bids;
 	
-	@OneToMany(mappedBy = "shipment")
-	@JsonIgnore
-	@ToString.Exclude
-	private List<Location> locations;
+	
 
 }
