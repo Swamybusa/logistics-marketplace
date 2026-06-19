@@ -58,5 +58,10 @@ public class Shipment {
 	@JsonIgnore
 	@ToString.Exclude
 	private List<Bid> bids;
+	
+	@OneToMany(mappedBy = "shipment")
+	@JsonIgnore
+	@ToString.Exclude
+	private List<Location> locations;
 
 }
