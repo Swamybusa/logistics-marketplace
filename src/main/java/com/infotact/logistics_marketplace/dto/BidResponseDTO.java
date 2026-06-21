@@ -1,10 +1,16 @@
 package com.infotact.logistics_marketplace.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BidResponseDTO {
-	private Long bidId;
+	private Long id;
 	private Double amount;
 	private Long shipmentId;
 	private Long carrierId;
