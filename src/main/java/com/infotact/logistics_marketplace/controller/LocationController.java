@@ -1,0 +1,52 @@
+package com.infotact.logistics_marketplace.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.infotact.logistics_marketplace.dto.LocationRequestDTO;
+import com.infotact.logistics_marketplace.dto.LocationResponseDTO;
+import com.infotact.logistics_marketplace.service.LocationService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/locations")
+@RequiredArgsConstructor
+public class LocationController {
+
+    private final LocationService locationService;
+
+    @PostMapping
+    public LocationResponseDTO createLocation(
+            @RequestBody LocationRequestDTO locationRequestDTO) {
+
+        return locationService.createLocation(locationRequestDTO);
+    }
+
+    @GetMapping("/{id}")
+    public LocationResponseDTO getLocationById(@PathVariable Long id) {
+
+        return locationService.getLocationById(id);
+    }
+
+    @GetMapping
+    public List<LocationResponseDTO> getAllLocations() {
+
+        return locationService.getAllLocations();
+    }
+
+    @PutMapping("/{id}")
+    public LocationResponseDTO updateLocation(
+            @PathVariable Long id,
+            @RequestBody LocationRequestDTO locationRequestDTO) {
+
+        return locationService.updateLocation(id, locationRequestDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteLocation(@PathVariable Long id) {
+
+        locationService.deleteLocation(id);
+    }
+}
