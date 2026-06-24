@@ -10,6 +10,7 @@ import com.infotact.logistics_marketplace.dto.ShipmentResponseDTO;
 import com.infotact.logistics_marketplace.entity.Location;
 import com.infotact.logistics_marketplace.entity.Shipment;
 import com.infotact.logistics_marketplace.entity.User;
+import com.infotact.logistics_marketplace.exception.ResourceNotFoundException;
 import com.infotact.logistics_marketplace.repository.LocationRepository;
 import com.infotact.logistics_marketplace.repository.ShipmentRepository;
 import com.infotact.logistics_marketplace.repository.UserRepository;
@@ -30,17 +31,17 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         Location sourceLocation = locationRepository.findById(
                 shipmentRequestDTO.getSourceLocationId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Source location not found"));
 
         Location destinationLocation = locationRepository.findById(
                 shipmentRequestDTO.getDestinationLocationId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Destination location not found"));
 
         User shipper = userRepository.findById(
                 shipmentRequestDTO.getShipperId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found"));
 
         Shipment shipment = Shipment.builder()
@@ -69,7 +70,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     public ShipmentResponseDTO getShipmentById(Long id) {
 
         Shipment shipment = shipmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Shipment not found with id: " + id));
 
         return ShipmentResponseDTO.builder()
@@ -105,22 +106,22 @@ public class ShipmentServiceImpl implements ShipmentService {
             ShipmentRequestDTO shipmentRequestDTO) {
 
         Shipment shipment = shipmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Shipment not found with id: " + id));
 
         Location sourceLocation = locationRepository.findById(
                 shipmentRequestDTO.getSourceLocationId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Source location not found"));
 
         Location destinationLocation = locationRepository.findById(
                 shipmentRequestDTO.getDestinationLocationId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Destination location not found"));
 
         User shipper = userRepository.findById(
                 shipmentRequestDTO.getShipperId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found"));
 
         shipment.setWeight(shipmentRequestDTO.getWeight());

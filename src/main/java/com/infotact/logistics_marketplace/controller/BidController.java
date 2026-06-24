@@ -2,12 +2,20 @@ package com.infotact.logistics_marketplace.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.infotact.logistics_marketplace.dto.BidRequestDTO;
 import com.infotact.logistics_marketplace.dto.BidResponseDTO;
 import com.infotact.logistics_marketplace.service.BidService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +27,7 @@ public class BidController {
 
     @PostMapping
     public BidResponseDTO createBid(
-            @RequestBody BidRequestDTO bidRequestDTO) {
+          @Valid  @RequestBody BidRequestDTO bidRequestDTO) {
 
         return bidService.createBid(bidRequestDTO);
     }
@@ -38,7 +46,7 @@ public class BidController {
 
     @PutMapping("/{id}")
     public BidResponseDTO updateBid(
-            @PathVariable Long id,
+           @Valid @PathVariable Long id,
             @RequestBody BidRequestDTO bidRequestDTO) {
 
         return bidService.updateBid(id, bidRequestDTO);

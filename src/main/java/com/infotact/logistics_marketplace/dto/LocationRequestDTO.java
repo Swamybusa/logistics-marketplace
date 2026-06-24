@@ -1,6 +1,10 @@
 package com.infotact.logistics_marketplace.dto;
 
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -8,8 +12,13 @@ import lombok.*;
 @Builder
 public class LocationRequestDTO {
 
-    private String city;
-    private String state;
-    private String country;
+	@NotBlank(message = "City is required")
+	private String city;
+
+	@NotBlank(message = "State is required")
+	private String state;
+
+	@NotBlank(message = "Country is required")
+	private String country;
 
 }

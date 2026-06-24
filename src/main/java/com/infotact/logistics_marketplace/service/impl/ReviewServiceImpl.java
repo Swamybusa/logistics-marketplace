@@ -9,6 +9,7 @@ import com.infotact.logistics_marketplace.dto.ReviewRequestDTO;
 import com.infotact.logistics_marketplace.dto.ReviewResponseDTO;
 import com.infotact.logistics_marketplace.entity.Review;
 import com.infotact.logistics_marketplace.entity.User;
+import com.infotact.logistics_marketplace.exception.ResourceNotFoundException;
 import com.infotact.logistics_marketplace.repository.ReviewRepository;
 import com.infotact.logistics_marketplace.repository.UserRepository;
 import com.infotact.logistics_marketplace.service.ReviewService;
@@ -26,11 +27,11 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponseDTO createReview(ReviewRequestDTO reviewRequestDTO) {
 
         User reviewer = userRepository.findById(reviewRequestDTO.getReviewerId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Reviewer not found with id: " + reviewRequestDTO.getReviewerId()));
 
         User reviewedUser = userRepository.findById(reviewRequestDTO.getReviewedUserId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Reviewed user not found with id: " + reviewRequestDTO.getReviewedUserId()));
 
         Review review = Review.builder()
@@ -55,7 +56,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponseDTO getReviewById(Long id) {
 
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + id));
 
         return ReviewResponseDTO.builder()
                 .id(review.getId())
@@ -85,14 +86,14 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponseDTO updateReview(Long id, ReviewRequestDTO reviewRequestDTO) {
 
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + id));
 
         User reviewer = userRepository.findById(reviewRequestDTO.getReviewerId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Reviewer not found with id: " + reviewRequestDTO.getReviewerId()));
 
         User reviewedUser = userRepository.findById(reviewRequestDTO.getReviewedUserId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Reviewed user not found with id: " + reviewRequestDTO.getReviewedUserId()));
 
         review.setRating(reviewRequestDTO.getRating());

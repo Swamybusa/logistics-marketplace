@@ -8,6 +8,7 @@ import com.infotact.logistics_marketplace.dto.ShipmentRequestDTO;
 import com.infotact.logistics_marketplace.dto.ShipmentResponseDTO;
 import com.infotact.logistics_marketplace.service.ShipmentService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +20,7 @@ public class ShipmentController {
 
     @PostMapping
     public ShipmentResponseDTO createShipment(
-            @RequestBody ShipmentRequestDTO shipmentRequestDTO) {
+           @Valid @RequestBody ShipmentRequestDTO shipmentRequestDTO) {
 
         return shipmentService.createShipment(shipmentRequestDTO);
     }
@@ -38,7 +39,7 @@ public class ShipmentController {
 
     @PutMapping("/{id}")
     public ShipmentResponseDTO updateShipment(
-            @PathVariable Long id,
+          @Valid  @PathVariable Long id,
             @RequestBody ShipmentRequestDTO shipmentRequestDTO) {
 
         return shipmentService.updateShipment(id, shipmentRequestDTO);

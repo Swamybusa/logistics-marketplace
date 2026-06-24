@@ -10,6 +10,7 @@ import com.infotact.logistics_marketplace.dto.BidResponseDTO;
 import com.infotact.logistics_marketplace.entity.Bid;
 import com.infotact.logistics_marketplace.entity.Shipment;
 import com.infotact.logistics_marketplace.entity.User;
+import com.infotact.logistics_marketplace.exception.ResourceNotFoundException;
 import com.infotact.logistics_marketplace.repository.BidRepository;
 import com.infotact.logistics_marketplace.repository.ShipmentRepository;
 import com.infotact.logistics_marketplace.repository.UserRepository;
@@ -85,15 +86,15 @@ public class BidServiceImpl implements BidService {
     public BidResponseDTO updateBid(Long id, BidRequestDTO bidRequestDTO) {
 
         Bid bid = bidRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Bid not found with id: " + id));
 
         Shipment shipment = shipmentRepository.findById(bidRequestDTO.getShipmentId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Shipment not found with id: " + bidRequestDTO.getShipmentId()));
 
         User carrier = userRepository.findById(bidRequestDTO.getCarrierId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found with id: " + bidRequestDTO.getCarrierId()));
 
         bid.setAmount(bidRequestDTO.getAmount());

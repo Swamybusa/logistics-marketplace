@@ -9,6 +9,7 @@ import com.infotact.logistics_marketplace.dto.VehicleRequestDTO;
 import com.infotact.logistics_marketplace.dto.VehicleResponseDTO;
 import com.infotact.logistics_marketplace.entity.User;
 import com.infotact.logistics_marketplace.entity.Vehicle;
+import com.infotact.logistics_marketplace.exception.ResourceNotFoundException;
 import com.infotact.logistics_marketplace.repository.UserRepository;
 import com.infotact.logistics_marketplace.repository.VehicleRepository;
 import com.infotact.logistics_marketplace.service.VehicleService;
@@ -26,7 +27,7 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleRequestDTO) {
 
         User carrier = userRepository.findById(vehicleRequestDTO.getCarrierId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found with id: " + vehicleRequestDTO.getCarrierId()));
 
         Vehicle vehicle = Vehicle.builder()
@@ -51,7 +52,7 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleResponseDTO getVehicleById(Long id) {
 
         Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
 
         return VehicleResponseDTO.builder()
                 .id(vehicle.getId())
@@ -81,10 +82,10 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleResponseDTO updateVehicle(Long id, VehicleRequestDTO vehicleRequestDTO) {
 
         Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
 
         User carrier = userRepository.findById(vehicleRequestDTO.getCarrierId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found with id: " + vehicleRequestDTO.getCarrierId()));
 
         vehicle.setVehicleNumber(vehicleRequestDTO.getVehicleNumber());

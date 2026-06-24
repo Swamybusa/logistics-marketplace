@@ -8,6 +8,7 @@ import com.infotact.logistics_marketplace.dto.VehicleRequestDTO;
 import com.infotact.logistics_marketplace.dto.VehicleResponseDTO;
 import com.infotact.logistics_marketplace.service.VehicleService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +20,7 @@ public class VehicleController {
 
     @PostMapping
     public VehicleResponseDTO createVehicle(
-            @RequestBody VehicleRequestDTO vehicleRequestDTO) {
+            @Valid@RequestBody VehicleRequestDTO vehicleRequestDTO) {
 
         return vehicleService.createVehicle(vehicleRequestDTO);
     }
@@ -38,7 +39,7 @@ public class VehicleController {
 
     @PutMapping("/{id}")
     public VehicleResponseDTO updateVehicle(
-            @PathVariable Long id,
+           @Valid @PathVariable Long id,
             @RequestBody VehicleRequestDTO vehicleRequestDTO) {
 
         return vehicleService.updateVehicle(id, vehicleRequestDTO);

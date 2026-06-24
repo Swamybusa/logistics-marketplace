@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.infotact.logistics_marketplace.dto.UserRequestDTO;
 import com.infotact.logistics_marketplace.dto.UserResponseDTO;
 import com.infotact.logistics_marketplace.entity.User;
+import com.infotact.logistics_marketplace.exception.ResourceNotFoundException;
 import com.infotact.logistics_marketplace.repository.UserRepository;
 import com.infotact.logistics_marketplace.service.UserService;
 
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO getUserById(Long id) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         return UserResponseDTO.builder()
                 .id(user.getId())
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         user.setFullName(userRequestDTO.getFullName());
         user.setEmail(userRequestDTO.getEmail());

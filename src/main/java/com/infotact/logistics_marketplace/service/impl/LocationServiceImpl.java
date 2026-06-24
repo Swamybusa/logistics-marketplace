@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.infotact.logistics_marketplace.dto.LocationRequestDTO;
 import com.infotact.logistics_marketplace.dto.LocationResponseDTO;
 import com.infotact.logistics_marketplace.entity.Location;
+import com.infotact.logistics_marketplace.exception.ResourceNotFoundException;
 import com.infotact.logistics_marketplace.repository.LocationRepository;
 import com.infotact.logistics_marketplace.service.LocationService;
 
@@ -44,7 +45,7 @@ public class LocationServiceImpl implements LocationService {
     public LocationResponseDTO getLocationById(Long id) {
 
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Location not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + id));
 
         return LocationResponseDTO.builder()
                 .id(location.getId())
@@ -72,7 +73,7 @@ public class LocationServiceImpl implements LocationService {
     public LocationResponseDTO updateLocation(Long id, LocationRequestDTO locationRequestDTO) {
 
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Location not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + id));
 
         location.setCity(locationRequestDTO.getCity());
         location.setState(locationRequestDTO.getState());

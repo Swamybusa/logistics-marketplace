@@ -8,6 +8,7 @@ import com.infotact.logistics_marketplace.dto.UserRequestDTO;
 import com.infotact.logistics_marketplace.dto.UserResponseDTO;
 import com.infotact.logistics_marketplace.service.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +20,7 @@ public class UserController {
 
     @PostMapping
     public UserResponseDTO createUser(
-            @RequestBody UserRequestDTO userRequestDTO) {
+            @Valid @RequestBody UserRequestDTO userRequestDTO) {
 
         return userService.createUser(userRequestDTO);
     }
@@ -38,7 +39,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserResponseDTO updateUser(
-            @PathVariable Long id,
+           @Valid @PathVariable Long id,
             @RequestBody UserRequestDTO userRequestDTO) {
 
         return userService.updateUser(id, userRequestDTO);

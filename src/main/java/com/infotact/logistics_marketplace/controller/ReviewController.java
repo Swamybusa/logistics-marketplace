@@ -8,6 +8,7 @@ import com.infotact.logistics_marketplace.dto.ReviewRequestDTO;
 import com.infotact.logistics_marketplace.dto.ReviewResponseDTO;
 import com.infotact.logistics_marketplace.service.ReviewService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +20,7 @@ public class ReviewController {
 
     @PostMapping
     public ReviewResponseDTO createReview(
-            @RequestBody ReviewRequestDTO reviewRequestDTO) {
+           @Valid @RequestBody ReviewRequestDTO reviewRequestDTO) {
 
         return reviewService.createReview(reviewRequestDTO);
     }
@@ -38,7 +39,7 @@ public class ReviewController {
 
     @PutMapping("/{id}")
     public ReviewResponseDTO updateReview(
-            @PathVariable Long id,
+           @Valid @PathVariable Long id,
             @RequestBody ReviewRequestDTO reviewRequestDTO) {
 
         return reviewService.updateReview(id, reviewRequestDTO);
