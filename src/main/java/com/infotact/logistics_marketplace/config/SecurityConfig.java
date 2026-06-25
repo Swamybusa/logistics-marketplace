@@ -34,14 +34,28 @@ public class SecurityConfig {
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-            		.requestMatchers(
-            		        "/auth/**",
-            		        "/swagger-ui/**",
-            		        "/v3/api-docs/**")
-            		.permitAll()
 
-            		.requestMatchers(HttpMethod.POST, "/api/users")
-            		.permitAll()
+                    .requestMatchers(
+                            "/auth/**",
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**")
+                    .permitAll()
+
+                    .requestMatchers(HttpMethod.POST, "/api/users")
+                    .permitAll()
+
+                    .requestMatchers(HttpMethod.POST, "/api/shipments/**")
+                    .hasRole("SHIPPER")
+
+                    .requestMatchers(HttpMethod.POST, "/api/bids/**")
+                    .hasRole("CARRIER")
+
+                    .requestMatchers(HttpMethod.POST, "/api/vehicles/**")
+                    .hasRole("CARRIER")
+
+                    .requestMatchers(HttpMethod.GET, "/api/users/**")
+                    .hasRole("ADMIN")
+
                     .anyRequest()
                     .authenticated())
             .addFilterBefore(
