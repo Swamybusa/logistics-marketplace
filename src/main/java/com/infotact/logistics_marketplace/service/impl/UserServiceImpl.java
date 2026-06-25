@@ -3,6 +3,7 @@ package com.infotact.logistics_marketplace.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.infotact.logistics_marketplace.dto.UserRequestDTO;
@@ -20,13 +21,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    
+    private final PasswordEncoder passwordEncoder;
     @Override
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
 
         User user = User.builder()
                 .fullName(userRequestDTO.getFullName())
                 .email(userRequestDTO.getEmail())
-                .password(userRequestDTO.getPassword())
+                .password(passwordEncoder.encode(userRequestDTO.getPassword()))
                 .role(userRequestDTO.getRole())
                 .build();
 
@@ -76,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
         user.setFullName(userRequestDTO.getFullName());
         user.setEmail(userRequestDTO.getEmail());
-        user.setPassword(userRequestDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         user.setRole(userRequestDTO.getRole());
 
         User updatedUser = userRepository.save(user);
