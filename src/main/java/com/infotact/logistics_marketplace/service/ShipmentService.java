@@ -11,7 +11,11 @@ public interface ShipmentService {
 
     ShipmentResponseDTO getShipmentById(Long id);
 
-    List<ShipmentResponseDTO> getAllShipments();
+    List<ShipmentResponseDTO> getAllShipments(
+    		int page,
+            int size,
+            String sortBy,
+            String direction);
 
     ShipmentResponseDTO updateShipment(Long id, ShipmentRequestDTO shipmentRequestDTO);
 

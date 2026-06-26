@@ -1,8 +1,11 @@
 package com.infotact.logistics_marketplace.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.infotact.logistics_marketplace.dto.ShipmentRequestDTO;
@@ -85,9 +88,22 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public List<ShipmentResponseDTO> getAllShipments() {
+    public List<ShipmentResponseDTO> getAllShipments(
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
 
-        return shipmentRepository.findAll()
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Shipment> shipmentPage =
+                shipmentRepository.findAll(pageable);
+
+        return shipmentPage.getContent()
                 .stream()
                 .map(shipment -> ShipmentResponseDTO.builder()
                         .id(shipment.getId())
@@ -98,7 +114,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                         .destinationLocationId(shipment.getDestinationLocation().getId())
                         .shipperId(shipment.getShipper().getId())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
