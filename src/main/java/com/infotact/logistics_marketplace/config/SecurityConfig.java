@@ -19,57 +19,41 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-        http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-                    .requestMatchers(
-                            "/auth/**",
-                            "/swagger-ui/**",
-                            "/v3/api-docs/**")
-                    .permitAll()
+		http.csrf(csrf -> csrf.disable())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> auth
 
-                    .requestMatchers(HttpMethod.POST, "/api/users")
-                    .permitAll()
+						.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
-                    .requestMatchers(HttpMethod.POST, "/api/shipments/**")
-                    .hasRole("SHIPPER")
+						.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 
-                    .requestMatchers(HttpMethod.POST, "/api/bids/**")
-                    .hasRole("CARRIER")
+						.requestMatchers(HttpMethod.POST, "/api/shipments/**").hasRole("SHIPPER")
 
-                    .requestMatchers(HttpMethod.POST, "/api/vehicles/**")
-                    .hasRole("CARRIER")
+						.requestMatchers(HttpMethod.POST, "/api/bids/**").hasRole("CARRIER")
 
-                    .requestMatchers(HttpMethod.GET, "/api/users/**")
-                    .hasRole("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/api/vehicles/**").hasRole("CARRIER")
 
-                    .anyRequest()
-                    .authenticated())
-            .addFilterBefore(
-                    jwtAuthenticationFilter,
-                    UsernamePasswordAuthenticationFilter.class);
+						.requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
 
-        return http.build();
-    }
+						.anyRequest().authenticated())
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config)
-            throws Exception {
+		return http.build();
+	}
 
-        return config.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+
+		return config.getAuthenticationManager();
+	}
 }
