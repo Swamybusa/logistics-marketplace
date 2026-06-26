@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.infotact.logistics_marketplace.dto.ShipmentRequestDTO;
 import com.infotact.logistics_marketplace.dto.ShipmentResponseDTO;
+import com.infotact.logistics_marketplace.enums.ShipmentStatus;
 
 public interface ShipmentService {
 
@@ -12,6 +13,7 @@ public interface ShipmentService {
     ShipmentResponseDTO getShipmentById(Long id);
 
     List<ShipmentResponseDTO> getAllShipments(
+    		ShipmentStatus status,
     		int page,
             int size,
             String sortBy,
