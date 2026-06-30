@@ -1,5 +1,7 @@
 package com.infotact.logistics_marketplace.dto;
 
+import com.infotact.logistics_marketplace.enums.BidStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +16,6 @@ public class BidResponseDTO {
 	private Double amount;
 	private Long shipmentId;
 	private Long carrierId;
+	private BidStatus status;
 
 }

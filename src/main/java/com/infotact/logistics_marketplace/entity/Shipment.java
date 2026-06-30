@@ -58,10 +58,16 @@ public class Shipment {
 	@JoinColumn(name = "shipper_id", nullable = false)
 	private User shipper;
 	
+	@ManyToOne
+	@JoinColumn(name = "assigned_carrier_id")
+	private User assignedCarrier;
+	
+	
 	@OneToMany(mappedBy = "shipment")
 	@JsonIgnore
 	@ToString.Exclude
 	private List<Bid> bids;
+	
 	
 	
 

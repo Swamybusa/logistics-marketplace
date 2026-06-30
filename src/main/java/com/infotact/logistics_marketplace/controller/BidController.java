@@ -51,6 +51,10 @@ public class BidController {
 
         return bidService.updateBid(id, bidRequestDTO);
     }
+    @PutMapping("/{bidId}/accept")
+    public BidResponseDTO acceptBid(@PathVariable Long bidId) {
+        return bidService.acceptBid(bidId);
+    }
 
     @DeleteMapping("/{id}")
     public void deleteBid(@PathVariable Long id) {

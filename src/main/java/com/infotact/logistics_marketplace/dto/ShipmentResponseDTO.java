@@ -16,5 +16,6 @@ public class ShipmentResponseDTO {
     private Long sourceLocationId;
     private Long destinationLocationId;
     private Long shipperId;
+    private Long assignedCarrierId;
 
 }

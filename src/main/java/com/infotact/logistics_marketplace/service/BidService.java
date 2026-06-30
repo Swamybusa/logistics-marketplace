@@ -16,5 +16,6 @@ public interface BidService {
     BidResponseDTO updateBid(Long id, BidRequestDTO bidRequestDTO);
 
     void deleteBid(Long id);
+    BidResponseDTO acceptBid(Long bidId);
 
 }
