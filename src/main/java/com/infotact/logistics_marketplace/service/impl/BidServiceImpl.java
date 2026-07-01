@@ -146,8 +146,7 @@ public class BidServiceImpl implements BidService {
 
         // 6. Update shipment
         shipment.setAssignedCarrier(acceptedBid.getCarrier());
-        shipment.setStatus(ShipmentStatus.ASSIGNED);
-
+        shipment.setStatus(ShipmentStatus.AWAITING_PICKUP);
         shipmentRepository.save(shipment);
 
         // 7. Response

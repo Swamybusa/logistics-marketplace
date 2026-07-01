@@ -8,19 +8,24 @@ import com.infotact.logistics_marketplace.enums.ShipmentStatus;
 
 public interface ShipmentService {
 
-    ShipmentResponseDTO createShipment(ShipmentRequestDTO shipmentRequestDTO);
+    ShipmentResponseDTO createShipment(ShipmentRequestDTO dto);
 
     ShipmentResponseDTO getShipmentById(Long id);
 
     List<ShipmentResponseDTO> getAllShipments(
-    		ShipmentStatus status,
-    		int page,
+            ShipmentStatus status,
+            int page,
             int size,
             String sortBy,
             String direction);
 
-    ShipmentResponseDTO updateShipment(Long id, ShipmentRequestDTO shipmentRequestDTO);
+    ShipmentResponseDTO updateShipment(Long id, ShipmentRequestDTO dto);
+
+    ShipmentResponseDTO assignShipment(Long shipmentId, Long carrierId);
+
+    ShipmentResponseDTO startShipment(Long shipmentId);
+
+    ShipmentResponseDTO deliverShipment(Long shipmentId);
 
     void deleteShipment(Long id);
-
 }

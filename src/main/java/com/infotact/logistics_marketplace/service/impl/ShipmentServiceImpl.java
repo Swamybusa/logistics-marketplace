@@ -2,22 +2,15 @@ package com.infotact.logistics_marketplace.service.impl;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import com.infotact.logistics_marketplace.dto.ShipmentRequestDTO;
 import com.infotact.logistics_marketplace.dto.ShipmentResponseDTO;
-import com.infotact.logistics_marketplace.entity.Location;
-import com.infotact.logistics_marketplace.entity.Shipment;
-import com.infotact.logistics_marketplace.entity.User;
-import com.infotact.logistics_marketplace.enums.ShipmentStatus;
+import com.infotact.logistics_marketplace.entity.*;
+import com.infotact.logistics_marketplace.enums.*;
 import com.infotact.logistics_marketplace.exception.ResourceNotFoundException;
-import com.infotact.logistics_marketplace.repository.LocationRepository;
-import com.infotact.logistics_marketplace.repository.ShipmentRepository;
-import com.infotact.logistics_marketplace.repository.UserRepository;
+import com.infotact.logistics_marketplace.repository.*;
 import com.infotact.logistics_marketplace.service.ShipmentService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,69 +23,45 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
 
+    // CREATE
     @Override
-    public ShipmentResponseDTO createShipment(ShipmentRequestDTO shipmentRequestDTO) {
+    public ShipmentResponseDTO createShipment(ShipmentRequestDTO dto) {
 
-        Location sourceLocation = locationRepository.findById(shipmentRequestDTO.getSourceLocationId())
-                .orElseThrow(() -> new ResourceNotFoundException("Source location not found"));
+        Shipment shipment = new Shipment();
 
-        Location destinationLocation = locationRepository.findById(shipmentRequestDTO.getDestinationLocationId())
-                .orElseThrow(() -> new ResourceNotFoundException("Destination location not found"));
+        shipment.setWeight(dto.getWeight());
+        shipment.setBudget(dto.getBudget());
+        shipment.setStatus(ShipmentStatus.BIDDING);
 
-        User shipper = userRepository.findById(shipmentRequestDTO.getShipperId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        shipment.setSourceLocation(locationRepository.findById(dto.getSourceLocationId())
+                .orElseThrow(() -> new ResourceNotFoundException("Source not found")));
 
-        Shipment shipment = Shipment.builder()
-                .weight(shipmentRequestDTO.getWeight())
-                .budget(shipmentRequestDTO.getBudget())
-                .status(shipmentRequestDTO.getStatus())
-                .sourceLocation(sourceLocation)
-                .destinationLocation(destinationLocation)
-                .shipper(shipper)
-                .build();
+        shipment.setDestinationLocation(locationRepository.findById(dto.getDestinationLocationId())
+                .orElseThrow(() -> new ResourceNotFoundException("Destination not found")));
 
-        Shipment savedShipment = shipmentRepository.save(shipment);
+        shipment.setShipper(userRepository.findById(dto.getShipperId())
+                .orElseThrow(() -> new ResourceNotFoundException("Shipper not found")));
 
-        return ShipmentResponseDTO.builder()
-                .id(savedShipment.getId())
-                .weight(savedShipment.getWeight())
-                .budget(savedShipment.getBudget())
-                .status(savedShipment.getStatus())
-                .sourceLocationId(savedShipment.getSourceLocation().getId())
-                .destinationLocationId(savedShipment.getDestinationLocation().getId())
-                .shipperId(savedShipment.getShipper().getId())
-                .assignedCarrierId(
-                        savedShipment.getAssignedCarrier() != null
-                                ? savedShipment.getAssignedCarrier().getId()
-                                : null
-                )
-                .build();
+        return map(shipmentRepository.save(shipment));
     }
 
+    // GET BY ID
     @Override
     public ShipmentResponseDTO getShipmentById(Long id) {
 
         Shipment shipment = shipmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
 
-        return ShipmentResponseDTO.builder()
-                .id(shipment.getId())
-                .weight(shipment.getWeight())
-                .budget(shipment.getBudget())
-                .status(shipment.getStatus())
-                .sourceLocationId(shipment.getSourceLocation().getId())
-                .destinationLocationId(shipment.getDestinationLocation().getId())
-                .shipperId(shipment.getShipper().getId())
-                .assignedCarrierId(
-                        shipment.getAssignedCarrier() != null
-                                ? shipment.getAssignedCarrier().getId()
-                                : null
-                )
-                .build();
+        return map(shipment);
     }
 
+    // GET ALL
     @Override
-    public List<ShipmentResponseDTO> getAllShipments(ShipmentStatus status, int page, int size, String sortBy,
+    public List<ShipmentResponseDTO> getAllShipments(
+            ShipmentStatus status,
+            int page,
+            int size,
+            String sortBy,
             String direction) {
 
         Sort sort = direction.equalsIgnoreCase("desc")
@@ -101,74 +70,100 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<Shipment> shipmentPage;
+        Page<Shipment> result = (status != null)
+                ? shipmentRepository.findByStatus(status, pageable)
+                : shipmentRepository.findAll(pageable);
 
-        if (status != null) {
-            shipmentPage = shipmentRepository.findByStatus(status, pageable);
-        } else {
-            shipmentPage = shipmentRepository.findAll(pageable);
-        }
-
-        return shipmentPage.getContent().stream()
-                .map(shipment -> ShipmentResponseDTO.builder()
-                        .id(shipment.getId())
-                        .weight(shipment.getWeight())
-                        .budget(shipment.getBudget())
-                        .status(shipment.getStatus())
-                        .sourceLocationId(shipment.getSourceLocation().getId())
-                        .destinationLocationId(shipment.getDestinationLocation().getId())
-                        .shipperId(shipment.getShipper().getId())
-                        .assignedCarrierId(
-                                shipment.getAssignedCarrier() != null
-                                        ? shipment.getAssignedCarrier().getId()
-                                        : null
-                        )
-                        .build())
-                .toList();
+        return result.getContent().stream().map(this::map).toList();
     }
 
+    // UPDATE
     @Override
-    public ShipmentResponseDTO updateShipment(Long id, ShipmentRequestDTO shipmentRequestDTO) {
+    public ShipmentResponseDTO updateShipment(Long id, ShipmentRequestDTO dto) {
 
         Shipment shipment = shipmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
 
-        Location sourceLocation = locationRepository.findById(shipmentRequestDTO.getSourceLocationId())
-                .orElseThrow(() -> new ResourceNotFoundException("Source location not found"));
+        shipment.setWeight(dto.getWeight());
+        shipment.setBudget(dto.getBudget());
 
-        Location destinationLocation = locationRepository.findById(shipmentRequestDTO.getDestinationLocationId())
-                .orElseThrow(() -> new ResourceNotFoundException("Destination location not found"));
-
-        User shipper = userRepository.findById(shipmentRequestDTO.getShipperId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        shipment.setWeight(shipmentRequestDTO.getWeight());
-        shipment.setBudget(shipmentRequestDTO.getBudget());
-        shipment.setStatus(shipmentRequestDTO.getStatus());
-        shipment.setSourceLocation(sourceLocation);
-        shipment.setDestinationLocation(destinationLocation);
-        shipment.setShipper(shipper);
-
-        Shipment updatedShipment = shipmentRepository.save(shipment);
-
-        return ShipmentResponseDTO.builder()
-                .id(updatedShipment.getId())
-                .weight(updatedShipment.getWeight())
-                .budget(updatedShipment.getBudget())
-                .status(updatedShipment.getStatus())
-                .sourceLocationId(updatedShipment.getSourceLocation().getId())
-                .destinationLocationId(updatedShipment.getDestinationLocation().getId())
-                .shipperId(updatedShipment.getShipper().getId())
-                .assignedCarrierId(
-                        updatedShipment.getAssignedCarrier() != null
-                                ? updatedShipment.getAssignedCarrier().getId()
-                                : null
-                )
-                .build();
+        return map(shipmentRepository.save(shipment));
     }
 
+    // ASSIGN (IMPORTANT FIX)
+    @Override
+    public ShipmentResponseDTO assignShipment(Long shipmentId, Long carrierId) {
+
+        Shipment shipment = shipmentRepository.findById(shipmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
+
+        if (shipment.getStatus() != ShipmentStatus.PENDING) {
+            throw new IllegalStateException("Only PENDING shipments can be assigned");
+        }
+
+        User carrier = userRepository.findById(carrierId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // optional role check
+        if (carrier.getRole() != Role.CARRIER) {
+            throw new IllegalStateException("User is not a CARRIER");
+        }
+
+        shipment.setAssignedCarrier(carrier);
+        shipment.setStatus(ShipmentStatus.AWAITING_PICKUP);
+
+        return map(shipmentRepository.save(shipment));
+    }
+
+    // START
+    @Override
+    public ShipmentResponseDTO startShipment(Long shipmentId) {
+
+        Shipment shipment = shipmentRepository.findById(shipmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
+
+        if (shipment.getStatus() != ShipmentStatus.AWAITING_PICKUP) {
+            throw new IllegalStateException("Shipment must be ASSIGNED first");
+        }
+
+        shipment.setStatus(ShipmentStatus.IN_TRANSIT);
+
+        return map(shipmentRepository.save(shipment));
+    }
+
+    // DELIVER
+    @Override
+    public ShipmentResponseDTO deliverShipment(Long shipmentId) {
+
+        Shipment shipment = shipmentRepository.findById(shipmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
+
+        if (shipment.getStatus() != ShipmentStatus.IN_TRANSIT) {
+            throw new IllegalStateException("Shipment must be IN_TRANSIT first");
+        }
+
+        shipment.setStatus(ShipmentStatus.DELIVERED);
+
+        return map(shipmentRepository.save(shipment));
+    }
+
+    // DELETE
     @Override
     public void deleteShipment(Long id) {
         shipmentRepository.deleteById(id);
+    }
+
+    // MAPPER
+    private ShipmentResponseDTO map(Shipment s) {
+        return ShipmentResponseDTO.builder()
+                .id(s.getId())
+                .weight(s.getWeight())
+                .budget(s.getBudget())
+                .status(s.getStatus())
+                .sourceLocationId(s.getSourceLocation().getId())
+                .destinationLocationId(s.getDestinationLocation().getId())
+                .shipperId(s.getShipper().getId())
+                .assignedCarrierId(s.getAssignedCarrier() != null ? s.getAssignedCarrier().getId() : null)
+                .build();
     }
 }
