@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+
+<h2>Shipment Tracking Test</h2>
+
+<button onclick="connect()">Connect</button>
+<button onclick="sendLocation()">Send Location</button>
+
+<pre id="output"></pre>
+
+<script>
+
+let stompClient = null;
+
+function connect() {
+
+    // ✅ MUST use SockJS (NOT WebSocket directly)
+    const socket = new SockJS("http://localhost:8080/ws");
+
+    stompClient = Stomp.over(socket);
+
+    // 👉 PUT YOUR JWT TOKEN HERE
+    const token = "YOUR_JWT_TOKEN_HERE";
+
+    stompClient.connect(
+        {
+            Authorization: "Bearer " + token
+        },
+        function (frame) {
+
+            document.getElementById("output").innerHTML += "Connected\n";
+
+            stompClient.subscribe("/topic/shipments/9", function (message) {
+
+                document.getElementById("output").innerHTML +=
+                    "Received : " + message.body + "\n";
+
+            });
+
+        }
+    );
+}
+
+
+function sendLocation() {
+
+    stompClient.send("/app/location", {}, JSON.stringify({
+
+        shipmentId: 9,
+        latitude: 17.3850,
+        longitude: 78.4867
+
+    }));
+
+    document.getElementById("output").innerHTML += "Location Sent\n";
+}
+
+</script>
+
+</body>
+</html>

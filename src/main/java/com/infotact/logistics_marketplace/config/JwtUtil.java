@@ -48,4 +48,12 @@ public class JwtUtil {
 
         return extractedEmail.equals(email);
     }
+    public boolean validateToken(String token) {
+        try {
+            extractEmail(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
