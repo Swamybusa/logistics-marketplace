@@ -2,6 +2,7 @@ package com.infotact.logistics_marketplace.controller;
 
 import java.util.List;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.infotact.logistics_marketplace.dto.LocationMessageDTO;
 import com.infotact.logistics_marketplace.dto.LocationRequestDTO;
 import com.infotact.logistics_marketplace.dto.LocationResponseDTO;
 import com.infotact.logistics_marketplace.service.LocationService;
@@ -22,16 +24,30 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/locations")
 @RequiredArgsConstructor
 public class LocationController {
+	private final SimpMessagingTemplate messagingTemplate;
 
     private final LocationService locationService;
 
     @PostMapping
     public LocationResponseDTO createLocation(
-           @Valid @RequestBody LocationRequestDTO locationRequestDTO) {
+            @Valid @RequestBody LocationRequestDTO request) {
 
-        return locationService.createLocation(locationRequestDTO);
+        LocationResponseDTO response = locationService.createLocation(request);
+
+        // 🔥 SEND REAL-TIME TRACKING DATA
+        LocationMessageDTO message = LocationMessageDTO.builder()
+                .shipmentId(request.getShipmentId())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .build();
+
+        messagingTemplate.convertAndSend(
+                "/topic/shipments/" + request.getShipmentId(),
+                message
+        );
+
+        return response;
     }
-
     @GetMapping("/{id}")
     public LocationResponseDTO getLocationById(@PathVariable Long id) {
 
@@ -39,7 +55,7 @@ public class LocationController {
     }
 
     @GetMapping
-    public List<LocationResponseDTO> getAllLocations() {
+   public List<LocationResponseDTO> getAllLocations() {
 
         return locationService.getAllLocations();
     }

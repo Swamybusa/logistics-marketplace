@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LocationRequestDTO {
 
+	private Long shipmentId;
+
 	@NotBlank(message = "City is required")
 	private String city;
 
@@ -20,5 +22,8 @@ public class LocationRequestDTO {
 
 	@NotBlank(message = "Country is required")
 	private String country;
+
+	private Double latitude; // ❗ ADD THIS
+	private Double longitude; // ❗ ADD THIS
 
 }
