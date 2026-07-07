@@ -20,12 +20,13 @@ public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
 
-   
-
     @Override
     public LocationResponseDTO createLocation(LocationRequestDTO locationRequestDTO) {
 
         Location location = Location.builder()
+                .shipmentId(locationRequestDTO.getShipmentId())
+                .latitude(locationRequestDTO.getLatitude())
+                .longitude(locationRequestDTO.getLongitude())
                 .city(locationRequestDTO.getCity())
                 .state(locationRequestDTO.getState())
                 .country(locationRequestDTO.getCountry())
@@ -35,6 +36,9 @@ public class LocationServiceImpl implements LocationService {
 
         return LocationResponseDTO.builder()
                 .id(savedLocation.getId())
+                .shipmentId(savedLocation.getShipmentId())
+                .latitude(savedLocation.getLatitude())
+                .longitude(savedLocation.getLongitude())
                 .city(savedLocation.getCity())
                 .state(savedLocation.getState())
                 .country(savedLocation.getCountry())
@@ -45,10 +49,14 @@ public class LocationServiceImpl implements LocationService {
     public LocationResponseDTO getLocationById(Long id) {
 
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + id));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Location not found with id: " + id));
 
         return LocationResponseDTO.builder()
                 .id(location.getId())
+                .shipmentId(location.getShipmentId())
+                .latitude(location.getLatitude())
+                .longitude(location.getLongitude())
                 .city(location.getCity())
                 .state(location.getState())
                 .country(location.getCountry())
@@ -62,6 +70,9 @@ public class LocationServiceImpl implements LocationService {
                 .stream()
                 .map(location -> LocationResponseDTO.builder()
                         .id(location.getId())
+                        .shipmentId(location.getShipmentId())
+                        .latitude(location.getLatitude())
+                        .longitude(location.getLongitude())
                         .city(location.getCity())
                         .state(location.getState())
                         .country(location.getCountry())
@@ -73,8 +84,12 @@ public class LocationServiceImpl implements LocationService {
     public LocationResponseDTO updateLocation(Long id, LocationRequestDTO locationRequestDTO) {
 
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + id));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Location not found with id: " + id));
 
+        location.setShipmentId(locationRequestDTO.getShipmentId());
+        location.setLatitude(locationRequestDTO.getLatitude());
+        location.setLongitude(locationRequestDTO.getLongitude());
         location.setCity(locationRequestDTO.getCity());
         location.setState(locationRequestDTO.getState());
         location.setCountry(locationRequestDTO.getCountry());
@@ -83,6 +98,9 @@ public class LocationServiceImpl implements LocationService {
 
         return LocationResponseDTO.builder()
                 .id(updatedLocation.getId())
+                .shipmentId(updatedLocation.getShipmentId())
+                .latitude(updatedLocation.getLatitude())
+                .longitude(updatedLocation.getLongitude())
                 .city(updatedLocation.getCity())
                 .state(updatedLocation.getState())
                 .country(updatedLocation.getCountry())
@@ -93,5 +111,25 @@ public class LocationServiceImpl implements LocationService {
     public void deleteLocation(Long id) {
 
         locationRepository.deleteById(id);
+    }
+
+    @Override
+    public LocationResponseDTO getLatestLocation(Long shipmentId) {
+
+        Location location = locationRepository
+                .findTopByShipmentIdOrderByIdDesc(shipmentId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Location not found for shipment id: " + shipmentId));
+
+        return LocationResponseDTO.builder()
+                .id(location.getId())
+                .shipmentId(location.getShipmentId())
+                .latitude(location.getLatitude())
+                .longitude(location.getLongitude())
+                .city(location.getCity())
+                .state(location.getState())
+                .country(location.getCountry())
+                .build();
     }
 }

@@ -8,9 +8,14 @@ import lombok.*;
 @Builder
 public class LocationResponseDTO {
 
-    private Long id;
-    private String city;
-    private String state;
-    private String country;
+	private Long id;
+	private String city;
+	private String state;
+	private String country;
+	
+    private Long shipmentId;
+	private Double latitude; // ❗ ADD THIS
+	private Double longitude; // ❗ ADD THIS
+
 
 }

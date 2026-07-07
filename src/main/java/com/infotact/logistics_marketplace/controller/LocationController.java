@@ -30,7 +30,8 @@ public class LocationController {
 
     @PostMapping
     public LocationResponseDTO createLocation(
-            @Valid @RequestBody LocationRequestDTO request) {
+    
+    		@Valid @RequestBody LocationRequestDTO request) {
 
         LocationResponseDTO response = locationService.createLocation(request);
 
@@ -48,6 +49,13 @@ public class LocationController {
 
         return response;
     }
+    @GetMapping("/latest/{shipmentId}")
+    public LocationResponseDTO getLatestLocation(
+            @PathVariable Long shipmentId) {
+
+        return locationService.getLatestLocation(shipmentId);
+    }
+    
     @GetMapping("/{id}")
     public LocationResponseDTO getLocationById(@PathVariable Long id) {
 
@@ -73,4 +81,5 @@ public class LocationController {
 
         locationService.deleteLocation(id);
     }
+   
 }

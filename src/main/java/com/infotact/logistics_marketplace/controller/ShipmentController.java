@@ -31,7 +31,7 @@ public class ShipmentController {
     public List<ShipmentResponseDTO> getAllShipments(
             @RequestParam(required = false) ShipmentStatus status,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
 

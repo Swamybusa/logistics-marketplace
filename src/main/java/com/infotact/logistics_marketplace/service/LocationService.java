@@ -16,5 +16,6 @@ public interface LocationService {
     LocationResponseDTO updateLocation(Long id, LocationRequestDTO locationRequestDTO);
 
     void deleteLocation(Long id);
+    LocationResponseDTO getLatestLocation(Long shipmentId);
 
 }
