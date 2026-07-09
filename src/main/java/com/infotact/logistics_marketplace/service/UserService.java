@@ -10,6 +10,7 @@ public interface UserService {
     UserResponseDTO createUser(UserRequestDTO userRequestDTO);
 
     UserResponseDTO getUserById(Long id);
+    UserResponseDTO getUserByEmail(String email);
 
     List<UserResponseDTO> getAllUsers();
 

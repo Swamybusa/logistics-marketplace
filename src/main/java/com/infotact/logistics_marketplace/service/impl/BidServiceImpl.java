@@ -117,6 +117,20 @@ public class BidServiceImpl implements BidService {
                 .carrierId(updatedBid.getCarrier().getId())
                 .build();
     }
+    @Override
+    public List<BidResponseDTO> getBidsByShipmentId(Long shipmentId) {
+
+        return bidRepository.findByShipment_Id(shipmentId)
+                .stream()
+                .map(bid -> BidResponseDTO.builder()
+                        .id(bid.getId())
+                        .amount(bid.getAmount())
+                        .status(bid.getStatus())
+                        .shipmentId(bid.getShipment().getId())
+                        .carrierId(bid.getCarrier().getId())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     @Override

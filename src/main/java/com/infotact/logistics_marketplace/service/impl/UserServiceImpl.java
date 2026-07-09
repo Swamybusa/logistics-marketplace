@@ -56,6 +56,23 @@ public class UserServiceImpl implements UserService {
                 .role(user.getRole())
                 .build();
     }
+    @Override
+    public UserResponseDTO getUserByEmail(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found with email: " + email
+                        )
+                );
+
+        return UserResponseDTO.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
+    }
 
     @Override
     public List<UserResponseDTO> getAllUsers() {

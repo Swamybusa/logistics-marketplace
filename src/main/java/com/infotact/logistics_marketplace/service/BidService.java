@@ -12,10 +12,11 @@ public interface BidService {
     BidResponseDTO getBidById(Long id);
 
     List<BidResponseDTO> getAllBids();
-
+    List<BidResponseDTO> getBidsByShipmentId(Long shipmentId);
     BidResponseDTO updateBid(Long id, BidRequestDTO bidRequestDTO);
 
     void deleteBid(Long id);
     BidResponseDTO acceptBid(Long bidId);
+
 
 }

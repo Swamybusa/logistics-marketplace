@@ -37,6 +37,12 @@ public class BidController {
 
         return bidService.getBidById(id);
     }
+    @GetMapping("/shipment/{shipmentId}")
+    public List<BidResponseDTO> getBidsByShipment(
+            @PathVariable Long shipmentId) {
+
+        return bidService.getBidsByShipmentId(shipmentId);
+    }
 
     @GetMapping
     public List<BidResponseDTO> getAllBids() {
