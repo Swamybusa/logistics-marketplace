@@ -123,7 +123,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
 
         if (shipment.getStatus() != ShipmentStatus.AWAITING_PICKUP) {
-            throw new IllegalStateException("Shipment must be ASSIGNED first");
+            throw new IllegalStateException("Shipment must be in AWAITING_PICKUP status");
         }
 
         shipment.setStatus(ShipmentStatus.IN_TRANSIT);
