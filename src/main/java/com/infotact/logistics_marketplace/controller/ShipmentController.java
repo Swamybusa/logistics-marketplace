@@ -65,6 +65,12 @@ public class ShipmentController {
 
         return shipmentService.deliverShipment(id);
     }
+    @GetMapping("/carrier/{carrierId}")
+    public List<ShipmentResponseDTO> getShipmentsByCarrier(
+            @PathVariable Long carrierId) {
+
+        return shipmentService.getShipmentsByCarrier(carrierId);
+    }
 
     @PutMapping("/{id}")
     public ShipmentResponseDTO updateShipment(
@@ -79,5 +85,11 @@ public class ShipmentController {
             @PathVariable Long id) {
 
         shipmentService.deleteShipment(id);
+    }
+    @PutMapping("/{id}/cancel")
+    public ShipmentResponseDTO cancelShipment(
+            @PathVariable Long id) {
+
+        return shipmentService.cancelShipment(id);
     }
 }

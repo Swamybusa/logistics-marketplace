@@ -27,5 +27,7 @@ public interface ShipmentService {
 
     ShipmentResponseDTO deliverShipment(Long shipmentId);
 
+    List<ShipmentResponseDTO> getShipmentsByCarrier(Long carrierId);
     void deleteShipment(Long id);
+    ShipmentResponseDTO cancelShipment(Long shipmentId);
 }

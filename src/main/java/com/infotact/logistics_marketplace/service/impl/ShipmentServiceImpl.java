@@ -146,7 +146,14 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         return map(shipmentRepository.save(shipment));
     }
+    @Override
+    public List<ShipmentResponseDTO> getShipmentsByCarrier(Long carrierId) {
 
+        return shipmentRepository.findByAssignedCarrierId(carrierId)
+                .stream()
+                .map(this::map)
+                .toList();
+    }
     // DELETE
     @Override
     public void deleteShipment(Long id) {
@@ -155,15 +162,58 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     // MAPPER
     private ShipmentResponseDTO map(Shipment s) {
+
         return ShipmentResponseDTO.builder()
+
                 .id(s.getId())
+
                 .weight(s.getWeight())
+
                 .budget(s.getBudget())
+
                 .status(s.getStatus())
-                .sourceLocationId(s.getSourceLocation().getId())
-                .destinationLocationId(s.getDestinationLocation().getId())
-                .shipperId(s.getShipper().getId())
-                .assignedCarrierId(s.getAssignedCarrier() != null ? s.getAssignedCarrier().getId() : null)
+
+
+                .sourceLocationId(
+                        s.getSourceLocation().getId()
+                )
+
+                .destinationLocationId(
+                        s.getDestinationLocation().getId()
+                )
+
+
+                .sourceCity(
+                        s.getSourceLocation().getCity()
+                )
+
+                .destinationCity(
+                        s.getDestinationLocation().getCity()
+                )
+
+
+                .shipperId(
+                        s.getShipper().getId()
+                )
+
+
+                .assignedCarrierId(
+                        s.getAssignedCarrier() != null
+                        ? s.getAssignedCarrier().getId()
+                        : null
+                )
+
+
                 .build();
+    }
+    @Override
+    public ShipmentResponseDTO cancelShipment(Long shipmentId) {
+
+        Shipment shipment = shipmentRepository.findById(shipmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
+
+        shipment.setStatus(ShipmentStatus.CANCELLED);
+
+        return map(shipmentRepository.save(shipment));
     }
 }
