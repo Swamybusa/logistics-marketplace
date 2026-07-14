@@ -11,15 +11,11 @@ import com.infotact.logistics_marketplace.service.TrackingLocationService;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
-public class TrackingLocationServiceImpl 
-        implements TrackingLocationService {
-
+public class TrackingLocationServiceImpl implements TrackingLocationService {
 
     private final TrackingLocationRepository repository;
-
 
 
     @Override
@@ -28,21 +24,27 @@ public class TrackingLocationServiceImpl
 
 
         TrackingLocation location = TrackingLocation.builder()
+
                 .shipmentId(requestDTO.getShipmentId())
+
                 .latitude(requestDTO.getLatitude())
+
                 .longitude(requestDTO.getLongitude())
+
                 .city(requestDTO.getCity())
+
                 .state(requestDTO.getState())
+
                 .country(requestDTO.getCountry())
+
                 .build();
 
 
-        TrackingLocation saved = repository.save(location);
+        TrackingLocation savedLocation = repository.save(location);
 
 
-        return mapToDTO(saved);
+        return mapToDTO(savedLocation);
     }
-
 
 
     @Override
@@ -52,16 +54,16 @@ public class TrackingLocationServiceImpl
 
         TrackingLocation location =
                 repository.findTopByShipmentIdOrderByCreatedAtDesc(shipmentId)
+
                 .orElseThrow(() ->
-                    new ResourceNotFoundException(
-                        "Location not found for shipment id: "
-                        + shipmentId
-                    ));
+                        new ResourceNotFoundException(
+                                "Location not found for shipment id: "
+                                        + shipmentId
+                        ));
 
 
         return mapToDTO(location);
     }
-
 
 
     private TrackingLocationResponseDTO mapToDTO(
@@ -69,14 +71,23 @@ public class TrackingLocationServiceImpl
 
 
         return TrackingLocationResponseDTO.builder()
+
                 .id(location.getId())
+
                 .shipmentId(location.getShipmentId())
+
                 .latitude(location.getLatitude())
+
                 .longitude(location.getLongitude())
+
                 .city(location.getCity())
+
                 .state(location.getState())
+
                 .country(location.getCountry())
+
                 .createdAt(location.getCreatedAt())
+
                 .build();
     }
 
