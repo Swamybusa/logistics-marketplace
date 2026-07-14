@@ -1,5 +1,6 @@
 package com.infotact.logistics_marketplace.service.impl;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.infotact.logistics_marketplace.dto.TrackingLocationRequestDTO;
@@ -11,11 +12,17 @@ import com.infotact.logistics_marketplace.service.TrackingLocationService;
 
 import lombok.RequiredArgsConstructor;
 
+
 @Service
 @RequiredArgsConstructor
-public class TrackingLocationServiceImpl implements TrackingLocationService {
+public class TrackingLocationServiceImpl 
+        implements TrackingLocationService {
+
 
     private final TrackingLocationRepository repository;
+
+    private final SimpMessagingTemplate messagingTemplate;
+
 
 
     @Override
@@ -40,11 +47,26 @@ public class TrackingLocationServiceImpl implements TrackingLocationService {
                 .build();
 
 
+
         TrackingLocation savedLocation = repository.save(location);
 
 
-        return mapToDTO(savedLocation);
+
+        TrackingLocationResponseDTO response = mapToDTO(savedLocation);
+
+
+
+        // Send live location update
+        messagingTemplate.convertAndSend(
+                "/topic/shipments/" + savedLocation.getShipmentId(),
+                response
+        );
+
+
+
+        return response;
     }
+
 
 
     @Override
@@ -62,8 +84,11 @@ public class TrackingLocationServiceImpl implements TrackingLocationService {
                         ));
 
 
+
         return mapToDTO(location);
     }
+
+
 
 
     private TrackingLocationResponseDTO mapToDTO(
@@ -89,6 +114,7 @@ public class TrackingLocationServiceImpl implements TrackingLocationService {
                 .createdAt(location.getCreatedAt())
 
                 .build();
+
     }
 
 }
