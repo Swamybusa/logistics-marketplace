@@ -1,5 +1,6 @@
 package com.infotact.logistics_marketplace.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -63,6 +64,8 @@ public class Shipment {
 	@OneToMany(mappedBy = "shipment")
 	@JsonIgnore
 	@ToString.Exclude
-	private List<Bid> bids;
+	@Builder.Default
+	private List<Bid> bids = new ArrayList<>();
+
 
 }
