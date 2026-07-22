@@ -1,27 +1,107 @@
-# 🚚 Logistics Marketplace - Real-Time Shipment Tracking Platform
+# 🚚 Logistics Marketplace - Shipment Management System
 
-A full-stack logistics marketplace application that connects **Shippers** and **Carriers** through shipment creation, bidding workflow, and real-time GPS tracking.
+A full-stack **Logistics Marketplace Platform** that connects **Shippers** and **Carriers** through shipment creation, bidding workflow, assignment, and real-time shipment tracking.
 
-The platform allows shippers to create shipment requests, carriers to place bids, and both users to monitor shipment progress using live location updates powered by WebSockets.
+The application provides a complete shipment lifecycle:
+
+**Create Shipment → Receive Bids → Accept Carrier → Track Shipment → Deliver Shipment**
 
 ---
 
-## 📌 Project Overview
+# 📌 Project Overview
 
-The Logistics Marketplace solves the problem of connecting businesses that need transportation services with carriers who can fulfill shipment requirements.
+Logistics Marketplace is a web-based platform designed to simplify transportation management.
 
-### Main Features
+Shippers can create shipments, manage bids, assign carriers, and track deliveries.
 
-* User authentication with JWT
-* Role-based access control (SHIPPER / CARRIER)
-* Shipment creation and management
-* Carrier shipment discovery
-* Bidding system
-* Bid acceptance workflow
-* Real-time shipment tracking
-* Interactive map-based location display
-* Automatic WebSocket reconnection
-* Responsive dashboards
+Carriers can view available shipments, place bids, manage assigned shipments, update live locations, and complete deliveries.
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication & Authorization
+
+- JWT based authentication
+- Secure login system
+- Role-based access control
+
+Roles:
+
+- SHIPPER
+- CARRIER
+
+---
+
+## 📦 Shipment Management
+
+### Shipper Features
+
+- Create new shipments
+- View shipment dashboard
+- View shipment details
+- Cancel shipments
+- Monitor shipment status
+
+Shipment Status Flow:
+
+
+PENDING
+↓
+BIDDING
+↓
+AWAITING_PICKUP
+↓
+IN_TRANSIT
+↓
+DELIVERED
+
+
+---
+
+## 💰 Bidding System
+
+Carrier workflow:
+
+- View available shipments
+- Place bids
+- Manage assigned shipments
+
+
+Shipper workflow:
+
+- View received bids
+- Accept carrier bid
+- Automatically reject other bids
+
+---
+
+## 🚚 Carrier Dashboard
+
+Carrier can:
+
+- View assigned shipments
+- Start shipment pickup
+- Update shipment location
+- Mark shipment as delivered
+
+---
+
+## 🌍 Real-Time Shipment Tracking
+
+Implemented using:
+
+- WebSocket
+- STOMP Protocol
+- SockJS
+- React Leaflet Maps
+
+
+Features:
+
+- Live location updates
+- Automatic WebSocket reconnect
+- Interactive map tracking
 
 ---
 
@@ -29,377 +109,258 @@ The Logistics Marketplace solves the problem of connecting businesses that need 
 
 ## Backend
 
-* Java
-* Spring Boot
-* Spring Security
-* JWT Authentication
-* Spring WebSocket (STOMP)
-* PostgreSQL
-* Maven
-* REST APIs
+- Java
+- Spring Boot
+- Spring Security
+- JWT Authentication
+- Spring Data JPA
+- PostgreSQL
+- WebSocket
+- STOMP
+
 
 ## Frontend
 
-* React.js
-* React Router
-* Axios
-* Leaflet Maps
-* SockJS
-* STOMP Client
-* CSS3
+- React.js
+- React Router
+- Axios
+- Leaflet Maps
+- SockJS
+- STOMP Client
+
+
+## Tools
+
+- Git & GitHub
+- Postman
+- VS Code
+- Eclipse
 
 ---
 
-# 🏗 System Architecture
+# 🏗 Project Structure
 
-```
-                 React Frontend
-                       |
-                       |
-                 REST APIs
-                       |
-                       |
-              Spring Boot Backend
-              /       |        \
-             /        |         \
-       PostgreSQL   JWT     WebSocket
-                              |
-                              |
-                    Live Shipment Updates
-                              |
-                              |
-                         Leaflet Map
-```
 
----
+logistics-marketplace
 
-# 👥 User Roles
+│
+├── backend
+│ ├── controller
+│ ├── service
+│ ├── repository
+│ ├── entity
+│ ├── security
+│ └── websocket
+│
+├── frontend
+│ ├── pages
+│ ├── components
+│ ├── services
+│ └── styles
+│
+├── docs
+│ └── screenshots
+│
+└── README.md
 
-## 🚚 Shipper
-
-Features:
-
-* Register/Login
-* Create shipments
-* View shipment status
-* View carrier bids
-* Accept bids
-* Track shipments
-* Cancel shipments
 
 ---
 
-## 🚛 Carrier
+# 📸 Application Screenshots
 
-Features:
+## 🔐 Login Page
 
-* Register/Login
-* View available shipments
-* Place bids
-* Manage assigned shipments
-* Update shipment location
-* Mark shipments delivered
+![Login](docs/screenshots/login-page.png)
 
----
 
-# 📦 Shipment Workflow
+## 🚚 Shipper Dashboard
 
-```
-Shipment Created
+![Dashboard](docs/screenshots/shipper-dashboard.png)
 
-        ↓
 
-BIDDING
+## 📦 Create Shipment
 
-        ↓
+![Create Shipment](docs/screenshots/create-shipment.png)
 
-Carrier Places Bid
 
-        ↓
+## 🚛 Carrier Dashboard
 
-Shipper Accepts Bid
+![Carrier Dashboard](docs/screenshots/carrier-dashboard.png)
 
-        ↓
 
-AWAITING_PICKUP
+## 📋 Available Shipments
 
-        ↓
+![Available Shipments](docs/screenshots/available-shipments.png)
 
-IN_TRANSIT
 
-        ↓
+## 💰 Place Bid
 
-DELIVERED
-```
+![Place Bid](docs/screenshots/place-bid.png)
 
----
 
-# 💰 Bidding Workflow
+## 📑 View Bids
 
-1. Carrier views available shipments
-2. Carrier submits a bid
-3. Shipper reviews bids
-4. Shipper accepts one bid
-5. Accepted bid becomes active
-6. Other bids are automatically rejected
-7. Shipment moves to AWAITING_PICKUP
+![View Bids](docs/screenshots/view-bids.png)
+
+
+## 📦 Shipment Details
+
+![Shipment Details](docs/screenshots/shipment-details.png)
+
+
+## 🌍 Live Tracking
+
+![Tracking](docs/screenshots/tracking-map.png)
+
+
+## 📍 Update Location
+
+![Update Location](docs/screenshots/update-location.png)
 
 ---
 
-# 📍 Real-Time Tracking Architecture
+# 🚀 Running the Application
 
-The application uses Spring WebSocket with STOMP messaging.
+## Backend Setup
 
-## Flow
+Clone repository:
 
-```
-Driver Location Update
 
-        ↓
+git clone https://github.com/Swamybusa/logistics-marketplace.git
 
-Spring Boot WebSocket Endpoint
 
-        ↓
+Open backend project.
 
-Shipment Topic
+Configure PostgreSQL database:
 
-/topic/shipments/{shipmentId}
 
-        ↓
+spring.datasource.url=jdbc:postgresql://localhost:5432/logistics
+spring.datasource.username=postgres
+spring.datasource.password=password
 
-React Tracking Component
 
-        ↓
+Run Spring Boot application.
 
-Leaflet Map Update
-```
+Backend runs on:
 
-## WebSocket Features
 
-✅ Shipment-specific topics
-✅ Live coordinate updates
-✅ React map movement
-✅ Automatic reconnect support
+http://localhost:8080
 
-Example:
-
-```javascript
-reconnectDelay: 5000
-```
-
-If the network connection drops, the client automatically attempts reconnection.
 
 ---
 
-# 🔐 Security
+## Frontend Setup
 
-Implemented using Spring Security and JWT.
+Navigate to React project:
 
-Features:
 
-* Token-based authentication
-* Protected APIs
-* Role-based authorization
-* Shipper/Carrier data separation
+cd logistics-tracking-ui
+
+
+Install dependencies:
+
+
+npm install
+
+
+Start application:
+
+
+npm start
+
+
+Frontend runs on:
+
+
+http://localhost:3000
+
 
 ---
 
-# 🌐 API Overview
+# 🔑 Demo Credentials
+
+## Shipper Login
+
+
+Email:
+shipper@gmail.com
+
+Password:
+password
+
+
+## Carrier Login
+
+
+Email:
+carrier@gmail.com
+
+Password:
+password
+
+
+---
+
+# 📡 Important API Endpoints
 
 ## Authentication
 
-```
+
 POST /auth/login
-```
+
 
 ---
 
 ## Shipments
 
-Create shipment:
 
-```
 POST /api/shipments
-```
 
-Get shipments:
-
-```
 GET /api/shipments
-```
 
-Get shipment details:
-
-```
 GET /api/shipments/{id}
-```
 
-Start shipment:
-
-```
 PUT /api/shipments/{id}/start
-```
 
-Deliver shipment:
-
-```
 PUT /api/shipments/{id}/deliver
-```
+
 
 ---
 
 ## Bidding
 
-Create bid:
 
-```
 POST /api/bids
-```
 
-Accept bid:
+GET /api/bids/shipment/{shipmentId}
 
-```
 PUT /api/bids/{bidId}/accept
-```
+
 
 ---
 
 ## Tracking
 
-Update location:
 
-```
 POST /api/tracking-locations
-```
 
-Latest location:
-
-```
 GET /api/tracking-locations/latest/{shipmentId}
-```
 
-WebSocket endpoint:
+WebSocket:
 
-```
-/ws
-```
-
-Subscription:
-
-```
 /topic/shipments/{shipmentId}
-```
+
 
 ---
 
-# 🖥 Application Screenshots
+# 🔮 Future Enhancements
 
-Add screenshots here:
-
-* Login Page
-* Shipper Dashboard
-* Carrier Dashboard
-* Shipment Bidding
-* Live Tracking Map
-
-Example:
-
-```
-/screenshots/login.png
-/screenshots/dashboard.png
-/screenshots/tracking.png
-```
-
----
-
-# ⚙️ Running the Application
-
-## Backend
-
-Clone repository:
-
-```bash
-git clone <repository-url>
-```
-
-Navigate:
-
-```bash
-cd logistics-marketplace
-```
-
-Run:
-
-```bash
-mvn spring-boot:run
-```
-
-Backend runs on:
-
-```
-http://localhost:8080
-```
-
----
-
-## Frontend
-
-Navigate:
-
-```bash
-cd logistics-tracking-ui
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start application:
-
-```bash
-npm start
-```
-
-Frontend runs on:
-
-```
-http://localhost:3000
-```
-
----
-
-# 📂 Project Structure
-
-```
-logistics-marketplace
-
-├── backend
-│   ├── controller
-│   ├── service
-│   ├── repository
-│   ├── entity
-│   ├── security
-│   └── websocket
-│
-└── frontend
-    ├── pages
-    ├── components
-    ├── services
-    └── styles
-```
-
----
-
-# 🚀 Future Enhancements
-
-* Driver mobile application
-* Google Maps integration
-* Payment gateway
-* Email/SMS notifications
-* Advanced shipment filtering
-* Analytics dashboard
+- Payment integration
+- Notification system
+- Route optimization
+- Mobile application
+- Advanced analytics dashboard
+- Container deployment using Docker
 
 ---
 
@@ -407,18 +368,9 @@ logistics-marketplace
 
 **Swamy Busa**
 
-MCA Graduate | Java Full Stack Developer
+Full Stack Developer  
+Java | Spring Boot | React | PostgreSQL
 
 ---
 
-# ⭐ Project Highlights
-
-This project demonstrates:
-
-* Full-stack development
-* Spring Boot REST API design
-* JWT security implementation
-* Real-time WebSocket communication
-* React dashboard development
-* Map-based tracking system
-* Marketplace business workflow
+⭐ If you like this project, consider giving it a star!
